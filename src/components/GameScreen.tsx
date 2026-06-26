@@ -74,19 +74,27 @@ export function GameScreen({ game }: Props) {
         </View>
 
         <View style={styles.bottomBar}>
-          <ClueDisplay
-            clue={currentPuzzle.clue}
-            wordNumber={wordIndex + 1}
-            totalWords={totalWords}
-            bottom
-          />
-          <GuessSlots
-            guess={guess}
-            revealed={revealed}
-            answer={currentPuzzle.word.toUpperCase()}
-            onSlotPress={clearSlot}
-            compact
-          />
+          <View style={styles.playRow}>
+            <View style={styles.clueColumn}>
+              <ClueDisplay
+                clue={currentPuzzle.clue}
+                wordNumber={wordIndex + 1}
+                totalWords={totalWords}
+                bottom
+                beside
+              />
+            </View>
+            <View style={styles.guessColumn}>
+              <GuessSlots
+                guess={guess}
+                revealed={revealed}
+                answer={currentPuzzle.word.toUpperCase()}
+                onSlotPress={clearSlot}
+                compact
+                beside
+              />
+            </View>
+          </View>
           <View style={styles.revealNoteSlot}>{revealNote}</View>
         </View>
       </View>
@@ -128,9 +136,22 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingTop: 4,
     paddingBottom: 14,
-    alignItems: 'center',
+    alignItems: 'stretch',
     gap: 2,
     overflow: 'visible',
+  },
+  playRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+  },
+  clueColumn: {
+    flex: 1,
+    minWidth: 0,
+    justifyContent: 'center',
+  },
+  guessColumn: {
+    flexShrink: 0,
   },
   revealNote: {
     fontFamily: fonts.hand,

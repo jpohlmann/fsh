@@ -8,14 +8,22 @@ type Props = {
   answer?: string;
   onSlotPress: (index: number) => void;
   compact?: boolean;
+  beside?: boolean;
 };
 
-export function GuessSlots({ guess, revealed, answer, onSlotPress, compact = false }: Props) {
+export function GuessSlots({
+  guess,
+  revealed,
+  answer,
+  onSlotPress,
+  compact = false,
+  beside = false,
+}: Props) {
   const fontSize = compact ? 24 : 32;
   const { height: letterHeight } = handLetterPixelSize(fontSize);
 
   return (
-    <View style={[styles.row, compact && styles.rowCompact]}>
+    <View style={[styles.row, compact && styles.rowCompact, beside && styles.rowBeside]}>
       {guess.map((char, i) => {
         const display = revealed && answer ? answer[i] : char;
         const showChar = display !== null && display !== undefined;
@@ -56,6 +64,11 @@ const styles = StyleSheet.create({
     gap: 6,
     paddingVertical: 10,
     paddingBottom: 16,
+  },
+  rowBeside: {
+    gap: 4,
+    paddingVertical: 0,
+    paddingBottom: 0,
   },
   slot: {
     alignItems: 'center',

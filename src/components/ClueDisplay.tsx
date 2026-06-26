@@ -8,6 +8,7 @@ type Props = {
   totalWords: number;
   compact?: boolean;
   bottom?: boolean;
+  beside?: boolean;
 };
 
 export function ClueDisplay({
@@ -16,11 +17,15 @@ export function ClueDisplay({
   totalWords,
   compact = false,
   bottom = false,
+  beside = false,
 }: Props) {
   const { width: screenWidth } = useWindowDimensions();
-  const maxTextWidth = Math.max(160, screenWidth - 96);
+  const maxTextWidth = beside
+    ? Math.max(120, screenWidth * 0.42)
+    : Math.max(160, screenWidth - 96);
   const counterSize = bottom ? 15 : compact ? 14 : 18;
-  const clueSize = bottom ? 20 : compact ? 18 : 26;
+  const clueSize = bottom ? (beside ? 18 : 20) : compact ? 18 : 26;
+  const textAlign = beside ? 'left' : bottom ? 'center' : 'right';
 
   return (
     <View
@@ -28,22 +33,19 @@ export function ClueDisplay({
         styles.container,
         compact && styles.containerCompact,
         bottom && styles.containerBottom,
+        beside && styles.containerBeside,
       ]}
     >
       <HandText
         fontSize={counterSize}
         color={theme.inkLight}
-        textAlign={bottom ? 'center' : 'right'}
+        textAlign={textAlign}
         maxWidth={maxTextWidth}
       >
         {`${wordNumber} / ${totalWords}`}
       </HandText>
-      <View style={[styles.clueWrap, bottom && styles.clueWrapBottom]}>
-        <HandText
-          fontSize={clueSize}
-          textAlign={bottom ? 'center' : 'right'}
-          maxWidth={maxTextWidth}
-        >
+      <View style={[styles.clueWrap, bottom && styles.clueWrapBottom, beside && styles.clueWrapBeside]}>
+        <HandText fontSize={clueSize} textAlign={textAlign} maxWidth={maxTextWidth}>
           {clue}
         </HandText>
       </View>
@@ -71,6 +73,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     paddingTop: 0,
     paddingBottom: 2,
+    flex: 0,
+  },
+  containerBeside: {
+    alignItems: 'flex-start',
+    paddingHorizontal: 0,
+    width: '100%',
   },
   clueWrap: {
     marginTop: 8,
@@ -80,5 +88,8 @@ const styles = StyleSheet.create({
     marginTop: 2,
     alignItems: 'center',
     alignSelf: 'stretch',
+  },
+  clueWrapBeside: {
+    alignItems: 'flex-start',
   },
 });
