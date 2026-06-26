@@ -1,0 +1,7 @@
+I would like to build a word game app similar to wordle or to a crossword puzzle game.  The title of the game is Fsh.  The goal is to guess the word from the hint before time runs out.  The faster you guess the word, the bigger fish trophy you get.  You would get 5 words to guess in a round.
+
+The letters for the word would appear in a lake next to the clue, and below the guess.  The letters would bob in the lake, giving the feeling that they're floating in the lake.  As time goes on, letters that aren't in the word sink, so you're left with fewer and fewer letters until you just have the letters of the word floating.  After that, you'll have another 5 seconds to guess the word before the answer is shown and you're moved to the next clue.  Selecting a letter would make the bloop sound of a bubble, and getting the word right would make a splash sound.
+
+I would like the artwork to be very minimalist.  I would like it to look like it's on a lined piece of paper, and everything is drawn on the page, see the attached image for an idea of how I'm thinking about it.
+
+I would like to build this in react native with expo so that I can release it for the web as well as an ios app.
