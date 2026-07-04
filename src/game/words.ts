@@ -23,6 +23,7 @@ export const PUZZLES: Puzzle[] = [
   { clue: 'Frozen dessert on a stick', word: 'POPSICLE' },
 ];
 
+/** Offline fallback when the daily API is unavailable (local dev). */
 export function pickRoundPuzzles(count: number): Puzzle[] {
   const shuffled = [...PUZZLES].sort(() => Math.random() - 0.5);
   return shuffled.slice(0, count);

@@ -35,6 +35,12 @@ export function fishWeightLbs(timeMs: number, wordLength: number, guessed: boole
   return round1(Math.max(floor, cap * factor));
 }
 
+/** Score for freestyle mode — weight scales with word length only. */
+export function weightForWordLength(length: number): number {
+  if (length < 3) return 0;
+  return round1(0.2 * length * length + 0.8 * length);
+}
+
 export function formatWeightLbs(lbs: number) {
   return `${lbs.toFixed(1)} lb`;
 }

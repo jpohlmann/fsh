@@ -5,16 +5,19 @@ type Props = {
   label: string;
   onPress: () => void;
   compact?: boolean;
+  disabled?: boolean;
 };
 
-export function SketchButton({ label, onPress, compact = false }: Props) {
+export function SketchButton({ label, onPress, compact = false, disabled = false }: Props) {
   return (
     <Pressable
       onPress={onPress}
+      disabled={disabled}
       style={({ pressed }) => [
         styles.button,
         compact && styles.buttonCompact,
-        pressed && styles.pressed,
+        pressed && !disabled && styles.pressed,
+        disabled && styles.disabled,
       ]}
     >
       <View style={styles.border}>
@@ -36,6 +39,9 @@ const styles = StyleSheet.create({
   pressed: {
     opacity: 0.7,
     transform: [{ scale: 0.97 }],
+  },
+  disabled: {
+    opacity: 0.45,
   },
   border: {
     borderWidth: 2,

@@ -11,7 +11,6 @@ import {
   WORDS_PER_ROUND,
   WordResult,
 } from './types';
-import { pickRoundPuzzles } from './words';
 
 type GameScreen = 'start' | 'playing' | 'results';
 
@@ -62,15 +61,22 @@ export function useGame() {
     startTimeRef.current = Date.now();
   }, []);
 
-  const startRound = useCallback(() => {
+  const startRound = useCallback(
+    (roundPuzzles: Puzzle[]) => {
+      clearTimers();
+      setPuzzles(roundPuzzles);
+      setWordIndex(0);
+      setResults([]);
+      setScreen('playing');
+      initWord(roundPuzzles[0]);
+    },
+    [clearTimers, initWord],
+  );
+
+  const goToMenu = useCallback(() => {
     clearTimers();
-    const round = pickRoundPuzzles(WORDS_PER_ROUND);
-    setPuzzles(round);
-    setWordIndex(0);
-    setResults([]);
-    setScreen('playing');
-    initWord(round[0]);
-  }, [clearTimers, initWord]);
+    setScreen('start');
+  }, [clearTimers]);
 
   const finishWord = useCallback(
     (guessed: boolean) => {
@@ -211,6 +217,7 @@ export function useGame() {
   return {
     screen,
     startRound,
+    goToMenu,
     wordIndex,
     currentPuzzle,
     letters,

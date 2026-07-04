@@ -1,0 +1,69 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: >
+  Cheapest Fsh API host - single t4g.micro (ARM) or t3.micro (x86 free tier).
+  No Lambda, API Gateway, or DynamoDB. SSH in and run server/deploy/ec2-setup.sh.
+
+Parameters:
+  InstanceType:
+    Type: String
+    Default: t4g.micro
+    AllowedValues:
+      - t4g.micro
+      - t3.micro
+    Description: t4g.micro is cheapest (~$6/mo); t3.micro is free-tier eligible
+
+  KeyName:
+    Type: AWS::EC2::KeyPair::KeyName
+    Description: EC2 key pair for SSH access
+
+  ApiPort:
+    Type: Number
+    Default: 3000
+    Description: Port exposed for the Node API
+
+Conditions:
+  UseArm: !Equals [!Ref InstanceType, t4g.micro]
+
+Resources:
+  ApiSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Fsh API - SSH and puzzle API port
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: !Ref ApiPort
+          ToPort: !Ref ApiPort
+          CidrIp: 0.0.0.0/0
+
+  ApiInstance:
+    Type: AWS::EC2::Instance
+    Properties:
+      InstanceType: !Ref InstanceType
+      KeyName: !Ref KeyName
+      ImageId: !If
+        - UseArm
+        - !Sub '{{resolve:ssm:/aws/service/ami-amazon-linux-latest/al2023-ami-kernel-default-arm64}}'
+        - !Sub '{{resolve:ssm:/aws/service/ami-amazon-linux-latest/al2023-ami-kernel-default-x86_64}}'
+      SecurityGroupIds:
+        - !Ref ApiSecurityGroup
+      BlockDeviceMappings:
+        - DeviceName: /dev/xvda
+          Ebs:
+            VolumeSize: 8
+            VolumeType: gp3
+            DeleteOnTermination: true
+      Tags:
+        - Key: Name
+          Value: fsh-api
+
+Outputs:
+  PublicIp:
+    Description: Point EXPO_PUBLIC_API_URL at http://THIS_IP:3000
+    Value: !GetAtt ApiInstance.PublicIp
+  SshCommand:
+    Description: Clone the repo, then run sudo bash server/deploy/ec2-setup.sh
+    Value: !Sub 'ssh -i YOUR_KEY.pem ec2-user@${ApiInstance.PublicIp}'

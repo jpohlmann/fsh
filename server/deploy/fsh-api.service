@@ -1,0 +1,16 @@
+[Unit]
+Description=Fsh daily puzzle API
+After=network.target
+
+[Service]
+Type=simple
+User=fsh
+Group=fsh
+WorkingDirectory=/opt/fsh-api
+EnvironmentFile=/etc/fsh-api.env
+ExecStart=/usr/bin/node /opt/fsh-api/index.js
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

@@ -31,7 +31,11 @@ yarn-error.*
 *.pem
 
 # local env files
+.env
 .env*.local
+
+# puzzle data on disk (local server)
+server/data/
 
 # typescript
 *.tsbuildinfo

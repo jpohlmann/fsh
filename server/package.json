@@ -1,0 +1,9 @@
+{
+  "name": "fsh-server",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Minimal puzzle API for EC2 micro — zero runtime dependencies",
+  "scripts": {
+    "start": "node index.js"
+  }
+}

@@ -15,9 +15,10 @@ const WORD_MARK_GAP = 6;
 type Props = {
   results: WordResult[];
   onPlayAgain: () => void;
+  onBackToMenu: () => void;
 };
 
-export function ResultsScreen({ results, onPlayAgain }: Props) {
+export function ResultsScreen({ results, onPlayAgain, onBackToMenu }: Props) {
   const { isLandscape, isCompact } = useCompactLayout();
   const caught = results.filter((r) => r.guessed).length;
   const totalLbs = totalWeightLbs(results);
@@ -90,6 +91,7 @@ export function ResultsScreen({ results, onPlayAgain }: Props) {
             </ScrollView>
             <View style={styles.landscapeButton}>
               <SketchButton label="Fish again" onPress={onPlayAgain} compact />
+              <SketchButton label="Back to Main Menu" onPress={onBackToMenu} compact />
             </View>
           </View>
         </View>
@@ -105,7 +107,10 @@ export function ResultsScreen({ results, onPlayAgain }: Props) {
       >
         {header}
         {list}
-        <SketchButton label="Fish again" onPress={onPlayAgain} />
+        <View style={styles.buttons}>
+          <SketchButton label="Fish again" onPress={onPlayAgain} />
+          <SketchButton label="Back to Main Menu" onPress={onBackToMenu} />
+        </View>
       </ScrollView>
     </PaperBackground>
   );
@@ -150,6 +155,7 @@ const styles = StyleSheet.create({
     paddingRight: 36,
     paddingLeft: 8,
     flexShrink: 0,
+    gap: 12,
   },
   title: {
     fontFamily: fonts.hand,
@@ -241,5 +247,9 @@ const styles = StyleSheet.create({
   },
   clueCompact: {
     fontSize: 16,
+  },
+  buttons: {
+    alignItems: 'center',
+    gap: 8,
   },
 });
